@@ -1,0 +1,136 @@
+/* Facebook Video Downloader - Custom Styles */
+
+/* Use minimal custom styles, rely on Bootstrap theme */
+.progress {
+    background-color: var(--bs-secondary-bg);
+    border-radius: 0.5rem;
+}
+
+.progress-bar {
+    transition: width 0.3s ease;
+}
+
+/* Download info styling */
+.download-info {
+    background-color: var(--bs-dark-bg-subtle);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--bs-border-color);
+}
+
+/* Custom card shadows */
+.card.shadow {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Icon improvements */
+.fab.fa-facebook {
+    color: #1877f2;
+}
+
+/* Code styling for download ID */
+code {
+    background-color: var(--bs-dark);
+    color: var(--bs-light);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+code:hover {
+    background-color: var(--bs-secondary);
+}
+
+/* Progress text styling */
+#progressText {
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Alert improvements */
+.alert {
+    border: none;
+    border-radius: 0.5rem;
+}
+
+/* Button loading state */
+.btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Form improvements */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+/* Invalid input styling */
+.form-control.is-invalid {
+    border-color: var(--bs-danger);
+}
+
+.form-control.is-invalid:focus {
+    border-color: var(--bs-danger);
+    box-shadow: 0 0 0 0.2rem rgba(var(--bs-danger-rgb), 0.25);
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .card-body {
+        padding: 1.5rem !important;
+    }
+    
+    .download-info .row .col-sm-6 {
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Footer styling */
+footer {
+    margin-top: auto;
+}
+
+/* Navbar brand improvements */
+.navbar-brand {
+    font-weight: 600;
+}
+
+.navbar-brand i {
+    color: #1877f2;
+}
+
+/* Animation for progress bar */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.progress-bar-animated {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Status badge improvements */
+.badge {
+    font-size: 0.8em;
+    padding: 0.4em 0.8em;
+}
+
+/* Download actions styling */
+#downloadActions .btn {
+    min-width: 150px;
+}
+
+/* Loading spinner */
+.fa-spinner {
+    animation-duration: 1s;
+}

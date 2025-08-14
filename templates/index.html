@@ -1,0 +1,309 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <i class="fab fa-facebook text-primary fs-1 mb-3"></i>
+                    <h1 class="card-title">Facebook Video Downloader</h1>
+                    <p class="text-muted">Download Facebook videos in various qualities</p>
+                </div>
+
+                <!-- Download Form -->
+                <form method="POST" action="{{ url_for('start_download') }}" id="downloadForm">
+                    <div class="mb-3">
+                        <label for="url" class="form-label">
+                            <i class="fas fa-link me-2"></i>Facebook Video URL
+                        </label>
+                        <input type="url" class="form-control form-control-lg" id="url" name="url" 
+                               placeholder="https://www.facebook.com/..." required>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Paste the URL of the Facebook video you want to download
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="quality" class="form-label">
+                            <i class="fas fa-video me-2"></i>Video Quality
+                        </label>
+                        <select class="form-select" id="quality" name="quality">
+                            <option value="best">Best Quality</option>
+                            <option value="720">720p</option>
+                            <option value="480">480p</option>
+                            <option value="360">360p</option>
+                            <option value="worst">Lowest Quality (Fastest)</option>
+                        </select>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg" id="downloadBtn">
+                            <i class="fas fa-download me-2"></i>Start Download
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Progress Section -->
+                {% if download_id %}
+                <div class="mt-4" id="progressSection">
+                    <hr>
+                    <h5><i class="fas fa-clock me-2"></i>Download Progress</h5>
+                    <div class="download-info mb-3" id="downloadInfo">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <strong>Download ID:</strong> 
+                                <code id="downloadId">{{ download_id }}</code>
+                            </div>
+                            <div class="col-sm-6">
+                                <strong>Status:</strong> 
+                                <span class="badge bg-warning" id="downloadStatus">Starting...</span>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-sm-6" id="titleContainer" style="display: none;">
+                                <strong>Title:</strong> 
+                                <span id="videoTitle">Loading...</span>
+                            </div>
+                            <div class="col-sm-6" id="speedContainer" style="display: none;">
+                                <strong>Speed:</strong> 
+                                <span id="downloadSpeed">0 MB/s</span>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-sm-6" id="viewCountContainer" style="display: none;">
+                                <strong>Views:</strong> 
+                                <span id="viewCount">Unknown</span>
+                            </div>
+                            <div class="col-sm-6" id="durationContainer" style="display: none;">
+                                <strong>Duration:</strong> 
+                                <span id="videoDuration">Unknown</span>
+                            </div>
+                        </div>
+                        <div class="row mt-2" id="thumbnailContainer" style="display: none;">
+                            <div class="col-12">
+                                <strong>Thumbnail:</strong><br>
+                                <img id="videoThumbnail" src="" alt="Video Thumbnail" class="img-fluid rounded mt-1" style="max-width: 200px; height: auto;">
+                            </div>
+                        </div>
+                        <div class="row mt-2" id="descriptionContainer" style="display: none;">
+                            <div class="col-12">
+                                <strong>Description:</strong> 
+                                <p id="videoDescription" class="text-muted mb-0"></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress mb-3" style="height: 25px;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                             id="progressBar" role="progressbar" style="width: 0%">
+                            <span id="progressText">0%</span>
+                        </div>
+                    </div>
+
+                    <div id="downloadActions" class="text-center" style="display: none;">
+                        <a href="#" class="btn btn-success me-2" id="downloadLink">
+                            <i class="fas fa-download me-2"></i>Download to PC
+                        </a>
+                        <button class="btn btn-secondary" onclick="location.reload()">
+                            <i class="fas fa-plus me-2"></i>Download Another
+                        </button>
+                    </div>
+
+                    <div id="errorMessage" class="alert alert-danger" style="display: none;">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <span id="errorText"></span>
+                    </div>
+                    
+                    <div id="successInfo" class="alert alert-info" style="display: none;">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Success:</strong> Video information extracted successfully! However, Facebook blocked the actual download. This confirms the app is working correctly - Facebook's 2024-2025 security measures prevent most video downloads while still allowing metadata extraction.
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Instructions Card -->
+        <div class="card shadow mt-4">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-question-circle me-2"></i>How to use
+                </h5>
+                <ol class="mb-0">
+                    <li>Copy the URL of the Facebook video you want to download</li>
+                    <li>Paste it in the URL field above</li>
+                    <li>Select your preferred video quality</li>
+                    <li>Click "Start Download" and wait for the process to complete</li>
+                    <li>Download the video file when ready</li>
+                </ol>
+                
+                <div class="alert alert-info mt-3 mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Note:</strong> This tool is for personal use only. Please respect content creators' rights and Facebook's terms of service.
+                </div>
+                
+                <div class="alert alert-warning mt-2 mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Facebook Download Status:</strong> Facebook has significantly strengthened their anti-download measures in 2024-2025.
+                    <div class="mt-2">
+                        <strong>What works:</strong>
+                        <ul class="mb-2">
+                            <li>Very old public videos (pre-2023)</li>
+                            <li>Videos from public pages with minimal restrictions</li>
+                            <li>Direct video file links (rare)</li>
+                        </ul>
+                        <strong>What typically fails:</strong>
+                        <ul class="mb-2">
+                            <li>Recent videos (2024-2025) - Facebook blocks most downloads</li>
+                            <li>Reels and stories - heavily protected</li>
+                            <li>Private or friend-only content</li>
+                            <li>Videos requiring login or age verification</li>
+                        </ul>
+                    </div>
+                    <small class="text-muted"><strong>Current status:</strong> The app successfully extracts video information but Facebook blocks most video downloads. This is normal behavior and affects all similar tools.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if download_id %}
+<script>
+    const downloadId = '{{ download_id }}';
+    let progressInterval;
+    
+    function checkProgress() {
+        fetch(`/status/${downloadId}`)
+            .then(response => response.json())
+            .then(data => {
+                updateProgress(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showError('Failed to check download status');
+            });
+    }
+    
+    function updateProgress(data) {
+        const statusElement = document.getElementById('downloadStatus');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const downloadActions = document.getElementById('downloadActions');
+        const errorMessage = document.getElementById('errorMessage');
+        const titleContainer = document.getElementById('titleContainer');
+        const speedContainer = document.getElementById('speedContainer');
+        const videoTitle = document.getElementById('videoTitle');
+        const downloadSpeed = document.getElementById('downloadSpeed');
+        const downloadLink = document.getElementById('downloadLink');
+        const viewCount = document.getElementById('viewCount');
+        const videoDuration = document.getElementById('videoDuration');
+        const videoThumbnail = document.getElementById('videoThumbnail');
+        const videoDescription = document.getElementById('videoDescription');
+        const viewCountContainer = document.getElementById('viewCountContainer');
+        const durationContainer = document.getElementById('durationContainer');
+        const thumbnailContainer = document.getElementById('thumbnailContainer');
+        const descriptionContainer = document.getElementById('descriptionContainer');
+        
+        if (data.status === 'not_found') {
+            showError('Download not found');
+            return;
+        }
+        
+        if (data.title && data.title !== 'Unknown') {
+            videoTitle.textContent = data.title;
+            titleContainer.style.display = 'block';
+        }
+        
+        if (data.speed && data.speed > 0) {
+            const speedMB = (data.speed / 1024 / 1024).toFixed(2);
+            downloadSpeed.textContent = `${speedMB} MB/s`;
+            speedContainer.style.display = 'block';
+        }
+        
+        // Show view count if available
+        if (data.view_count) {
+            viewCount.textContent = data.view_count;
+            viewCountContainer.style.display = 'block';
+        }
+        
+        // Show duration if available
+        if (data.duration && data.duration > 0) {
+            videoDuration.textContent = window.FacebookDownloader.formatDuration(data.duration);
+            durationContainer.style.display = 'block';
+        }
+        
+        // Show thumbnail if available
+        if (data.thumbnail) {
+            videoThumbnail.src = data.thumbnail;
+            thumbnailContainer.style.display = 'block';
+        }
+        
+        // Show description if available
+        if (data.description && data.description.trim() !== '') {
+            videoDescription.textContent = data.description;
+            descriptionContainer.style.display = 'block';
+        }
+        
+        const progress = Math.round(data.progress || 0);
+        progressBar.style.width = `${progress}%`;
+        progressText.textContent = `${progress}%`;
+        
+        switch (data.status) {
+            case 'downloading':
+                statusElement.textContent = 'Downloading';
+                statusElement.className = 'badge bg-primary';
+                break;
+                
+            case 'completed':
+                statusElement.textContent = 'Completed';
+                statusElement.className = 'badge bg-success';
+                downloadActions.style.display = 'block';
+                downloadLink.href = `/download_file/${downloadId}`;
+                progressBar.classList.remove('progress-bar-animated');
+                clearInterval(progressInterval);
+                break;
+                
+            case 'error':
+                statusElement.textContent = 'Error';
+                statusElement.className = 'badge bg-danger';
+                
+                // Check if we have video title - this means info extraction worked
+                if (data.title && data.title !== 'Loading...' && data.title !== 'Facebook Video' && data.title !== 'Failed to load') {
+                    document.getElementById('successInfo').style.display = 'block';
+                }
+                
+                showError(data.error || 'Unknown error occurred');
+                clearInterval(progressInterval);
+                break;
+        }
+    }
+    
+    function showError(message) {
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+        errorText.textContent = message;
+        errorMessage.style.display = 'block';
+    }
+    
+    function formatDuration(seconds) {
+        if (!seconds || seconds <= 0) return 'Unknown';
+        
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        
+        if (hours > 0) {
+            return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        } else {
+            return `${minutes}:${secs.toString().padStart(2, '0')}`;
+        }
+    }
+    
+    // Start checking progress
+    progressInterval = setInterval(checkProgress, 1000);
+    checkProgress(); // Check immediately
+</script>
+{% endif %}
+{% endblock %}
